@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Práctica de Lenguajes - Abril Torrez 💻</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #c8e6ff, #a8d5ff);
+      color: #003554;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      color: #004c70;
+      margin-top: 20px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+
+    p {
+      font-size: 17px;
+      color: #004c70;
+    }
+
+    select, textarea, button {
+      font-size: 16px;
+      border-radius: 12px;
+      border: 2px solid #0077b6;
+      padding: 10px;
+      width: 80%;
+      margin-top: 10px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    select:focus, textarea:focus {
+      border-color: #0096c7;
+      box-shadow: 0 0 5px #0096c7;
+    }
+
+    textarea {
+      height: 100px;
+      resize: none;
+      background-color: #f4fbff;
+      color: #003554;
+    }
+
+    button {
+      background-color: #0077b6;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #005f8a;
+      transform: scale(1.05);
+    }
+
+    .oculto {
+      display: none;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin: 10px auto;
+      width: 85%;
+      text-align: left;
+      border-left: 5px solid #0077b6;
+    }
+
+    #mensaje {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f0faff;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 85%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 13px;
+      color: #003554;
+      background-color: #bde0fe;
+      padding: 10px;
+      border-top: 2px solid #0077b6;
+    }
+
+    #inicio, #app, #progreso {
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="inicio">
+    <h1>💙 Práctica de Lenguajes 💙</h1>
+    <p>Selecciona un lenguaje y comienza a practicar tus ejercicios.</p>
+    <select id="lenguaje">
+      <option>HTML</option>
+      <option>JavaScript</option>
+      <option>Python</option>
+      <option>C++</option>
+      <option>Java</option>
+    </select><br>
+    <button onclick="mostrarApp()">Comenzar 🚀</button>
+  </div>
+
+  <div id="app" class="oculto">
+    <h1>Ejercicios de Programación 💡</h1>
+    <button onclick="mostrarEjercicio()">Nuevo Ejercicio</button>
+    <button onclick="mostrarProgreso()">Ver Progreso</button>
+    <button onclick="volverInicio()">Volver</button>
+
+    <div id="resultado" class="oculto">
+      <h2 id="titulo-ejercicio"></h2>
+      <p id="descripcion-ejercicio"></p>
+      <textarea id="respuesta" placeholder="Escribe tu respuesta aquí..."></textarea><br>
+      <button onclick="enviarRespuesta()">Enviar Respuesta</button>
+      <p id="mensaje"></p>
+    </div>
+  </div>
+
+  <div id="progreso" class="oculto">
+    <h1>📘 Tu progreso</h1>
+    <div id="lista-respuestas"></div>
+    <button onclick="volverApp()">Volver</button>
+  </div>
+
+  <footer>
+   Creado por <strong>Abril Torrez y Patrick Canizares</strong> UWU|
+  </footer>
+
+  <script>
+    const ejercicios = {
+      HTML: [
+        { titulo: "Encabezado principal", descripcion: "Crea un encabezado de nivel 1 que diga 'Hola Mundo'." },
+        { titulo: "Párrafo simple", descripcion: "Escribe un párrafo con el texto 'Bienvenida a la programación'." },
+        { titulo: "Imagen con atributo alt", descripcion: "Inserta una imagen con el atributo alt='logo'." },
+        { titulo: "Enlace externo", descripcion: "Crea un enlace que lleve a https://www.google.com." },
+        { titulo: "Lista ordenada", descripcion: "Crea una lista ordenada con 3 elementos." },
+        { titulo: "Lista desordenada", descripcion: "Crea una lista desordenada con 3 elementos." },
+        { titulo: "Salto de línea", descripcion: "Agrega un salto de línea entre dos frases." },
+        { titulo: "Comentario", descripcion: "Agrega un comentario en el código HTML." },
+        { titulo: "Tabla simple", descripcion: "Crea una tabla con 2 filas y 2 columnas." },
+        { titulo: "Botón", descripcion: "Crea un botón que diga 'Enviar'." }
+      ]
+    };
+
+    const respuestasCorrectas = {
+      HTML: {
+        "Encabezado principal": "<h1>hola mundo</h1>",
+        "Párrafo simple": "<p>bienvenida a la programación</p>",
+        "Imagen con atributo alt": "<img src='imagen.jpg' alt='logo'>",
+        "Enlace externo": "<a href='https://www.google.com'>enlace</a>",
+        "Lista ordenada": "<ol><li>1</li><li>2</li><li>3</li></ol>",
+        "Lista desordenada": "<ul><li>1</li><li>2</li><li>3</li></ul>",
+        "Salto de línea": "frase1<br>frase2",
+        "Comentario": "<!--comentario-->",
+        "Tabla simple": "<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>",
+        "Botón": "<button>enviar</button>"
+      }
+    };
+
+    // Normaliza para comparar (quita espacios, mayúsculas, comillas)
+    function normalizar(texto) {
+      return texto.toLowerCase()
+                  .replace(/\s+/g, '')
+                  .replace(/["']/g, "")
+                  .replace(/;/g, "")
+                  .trim();
+    }
+
+    function mostrarApp() {
+      document.getElementById("inicio").classList.add("oculto");
+      document.getElementById("app").classList.remove("oculto");
+    }
+
+    function volverInicio() {
+      document.getElementById("app").classList.add("oculto");
+      document.getElementById("inicio").classList.remove("oculto");
+      document.getElementById("resultado").classList.add("oculto");
+      document.getElementById("mensaje").innerText = "";
+      document.getElementById("respuesta").value = "";
+    }
+
+    function mostrarEjercicio() {
+      const lenguaje = document.getElementById("lenguaje").value;
+      const lista = ejercicios[lenguaje];
+      const aleatorio = lista[Math.floor(Math.random() * lista.length)];
+
+      document.getElementById("resultado").classList.remove("oculto");
+      document.getElementById("titulo-ejercicio").innerText = aleatorio.titulo;
+      document.getElementById("descripcion-ejercicio").innerText = aleatorio.descripcion;
+      document.getElementById("mensaje").innerText = "";
+      document.getElementById("respuesta").value = "";
+    }
+
+    function enviarRespuesta() {
+      const respuesta = document.getElementById("respuesta").value.trim();
+      const mensaje = document.getElementById("mensaje");
+      const lenguaje = document.getElementById("lenguaje").value;
+      const titulo = document.getElementById("titulo-ejercicio").innerText;
+
+      if (respuesta === "") {
+        mensaje.innerText = "⚠️ Escribe una respuesta.";
+        mensaje.style.color = "#b60000";
+        return;
+      }
+
+      const correcta = respuestasCorrectas[lenguaje]?.[titulo] || "";
+      const esCorrecto = normalizar(respuesta) === normalizar(correcta);
+
+      const respuestasGuardadas = JSON.parse(localStorage.getItem("respuestas")) || [];
+      respuestasGuardadas.push({ lenguaje, titulo, respuesta, correcto: esCorrecto });
+      localStorage.setItem("respuestas", JSON.stringify(respuestasGuardadas));
+
+      if (esCorrecto) {
+        mensaje.innerText = "✅ ¡Correcto! Excelente trabajo 💙";
+        mensaje.style.color = "#007f00";
+      } else {
+        mensaje.innerText = "❌ Incorrecto. Intenta de nuevo.";
+        mensaje.style.color = "#b60000";
+      }
+    }
+
+    function mostrarProgreso() {
+      document.getElementById("app").classList.add("oculto");
+      document.getElementById("progreso").classList.remove("oculto");
+
+      const lista = document.getElementById("lista-respuestas");
+      const respuestas = JSON.parse(localStorage.getItem("respuestas")) || [];
+
+      if (respuestas.length === 0) {
+        lista.innerHTML = "<p>No hay respuestas aún.</p>";
+        return;
+      }
+
+      lista.innerHTML = respuestas.map(r => {
+        const icono = r.correcto ? "✅" : "❌";
+        return `<div class='card'><strong>${r.lenguaje} - ${r.titulo} ${icono}</strong><p>${r.respuesta}</p></div>`;
+      }).join("");
+    }
+
+    function volverApp() {
+      document.getElementById("progreso").classList.add("oculto");
+      document.getElementById("app").classList.remove("oculto");
+    }
+  </script>
+</body>
+</html>
